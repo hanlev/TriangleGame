@@ -28,16 +28,45 @@ class Board(object):
     self.holes[14].move_options = [MoveOption(5,9), MoveOption(12,13)]
 
   def display(self):
-    print("would display Board here")
-    # TO DO
+    print("Current Board")
+    i = 0
+    rl = 1
+    while i <=14:
+      rholes=[]
+      rpegs=[]
+      for j in range(0,rl):
+        if(self.holes[i].peg):
+          rpegs.append("X")
+        else:
+          rpegs.append("O")
+        rholes.append(i)
+        i += 1
+      rl += 1 
+      for j in range(0,len(rpegs)):
+        print(rpegs[j]),
+      print("\n"),
+      for j in range(0,len(rholes)):
+        print(rholes[j]),
+      print("\n")
+    # TO DO: Make board printing prettier
  
   def game_over(self):
+    for h in self.holes:
+      if h.peg:
+        for m in h.move_options:
+          if not self.holes[m.dest].peg:
+            if self.holes[m.jump_over].peg:
+              print("There is at least one move available. Can jump to hole {}".format(m.dest))
+              return False
+              break
     return True
-    # TO DO
+    # TO DO: Check this to see if this method is ok
 
   def get_jump_over(self,start,dest):
-    return 0
-    # TO DO
+    for m in self.holes[start].move_options:
+      if m.dest == dest:
+        return m.jump_over
+    # TO DO: Check to see if this method is ok
    
 
 class Hole(object):
@@ -54,7 +83,7 @@ class MoveOption(object):
 # initialize board
 
 board = Board()
-print(board) 
+#print(board) 
 
 while True:
   board.display()
@@ -75,7 +104,7 @@ while True:
       print("Invalid move. Pick again")
     else:
       # perform move
-      board[start].peg = False
-      board[jump_over].peg = False
-      board[dest].peg = True
+      board.holes[start].peg = False
+      board.holes[jump_over].peg = False
+      board.holes[dest].peg = True
     
