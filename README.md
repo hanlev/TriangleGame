@@ -21,7 +21,7 @@ This game is written in Python and intended to be used at a Linux/Mac OS command
 
     python TriangleGame.py
 
-You will be given command-line prompts asking you to enter the number corresponding to a hole containing 
+You will be given command-line prompts asking you to enter a number corresponding to a hole containing 
 the peg that you want to move (that is, the peg that will be "jumping" over another peg to an empty hole).
-You will also be prompted to enter the number corresponding to the empty hole where you would like the moved 
+You will also be prompted to enter a number corresponding to the empty hole where you would like the moved 
 peg to land. 
