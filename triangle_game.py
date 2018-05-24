@@ -1,5 +1,7 @@
 #!/usr/bin/python
 
+from __future__ import print_function
+
 class Board(object):
   def __init__(self): 
     self.holes = []
@@ -28,27 +30,27 @@ class Board(object):
     self.holes[14].move_options = [MoveOption(5,9), MoveOption(12,13)]
 
   def display(self):
+    indent_per_row = 2
+    spaces_within_row = 3
+    peg_format = "{:>2}"
+    row_offset = 0
     print("Current Board")
-    i = 0
-    rl = 1
-    while i <=14:
-      rholes=[]
-      rpegs=[]
-      for j in range(0,rl):
-        if(self.holes[i].peg):
-          rpegs.append("X")
+    for i in range(5):
+      print(" " * ((5 - i - 1) * indent_per_row), end="")
+      for j in range(i+1):
+        if self.holes[row_offset + j].peg:
+          marker = "X"
         else:
-          rpegs.append("O")
-        rholes.append(i)
-        i += 1
-      rl += 1 
-      for j in range(0,len(rpegs)):
-        print(rpegs[j]),
-      print("\n"),
-      for j in range(0,len(rholes)):
-        print(rholes[j]),
-      print("\n")
-    # TO DO: Make board printing prettier
+          marker = "O"
+        print(peg_format.format(marker), end=" " * spaces_within_row)
+      print("")
+      print(" " * ((5 - i - 1) * indent_per_row), end="")
+      for j in range(i+1):
+        print(peg_format.format(row_offset + j), end=" " * spaces_within_row)
+      print("")
+      print("")
+      row_offset += i + 1
+    return
  
   def game_over(self):
     for h in self.holes:
@@ -60,13 +62,21 @@ class Board(object):
               return False
               break
     return True
-    # TO DO: Check this to see if this method is ok
 
   def get_jump_over(self,start,dest):
+    if start < 0 or start >= len(self.holes):
+      return None
+    if dest < 0 or dest >= len(self.holes):
+      return None
+    if not self.holes[start].peg or self.holes[dest].peg:
+      return None
     for m in self.holes[start].move_options:
       if m.dest == dest:
-        return m.jump_over
-    # TO DO: Check to see if this method is ok
+        if self.holes[m.jump_over].peg:
+          return m.jump_over
+        else:
+          return None
+    return None
    
 
 class Hole(object):
@@ -97,9 +107,14 @@ while True:
     break
   else: 
     # ask for next move
-    start = int(raw_input("Enter the start position: "))
-    dest = int(raw_input("Enter the destination position: "))
-    jump_over = board.get_jump_over(start, dest)
+    start = raw_input("Enter the start position: ")
+    dest = raw_input("Enter the destination position: ")
+    try:
+      start = int(start)
+      dest = int(dest)
+      jump_over = board.get_jump_over(start, dest)
+    except ValueError:
+      jump_over = None
     if jump_over is None:
       print("Invalid move. Pick again")
     else:
